@@ -1,12 +1,32 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import { createStore, Store } from 'vuex'
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+export interface State {
+  count: number
+}
+
+export const store = createStore<State>({
+  state: {
+    count: 0
+  },
+
+  mutations: {
+    // 將state設定為參數
+    Loaded(state) {
+      // state的isLoading true/false 互轉
+      state.count = state.count++
+    },
+    increment(state: { count: number }) {
+      state.count++
+    }
+  },
+  actions: {
+    increment(context) {
+      context.commit('increment')
+    }
+  },
+  getters: {
+    isEven(state) {
+      return state.count % 2 === 0
+    }
   }
-
-  return { count, doubleCount, increment }
 })

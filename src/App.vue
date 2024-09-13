@@ -1,18 +1,16 @@
 <script setup lang="ts" type="module">
-import { onBeforeMount, onMounted, useTemplateRef } from 'vue'
-const input = useTemplateRef('my-input')
+import MyButton from './components/MyButton.vue'
 
-onBeforeMount(() => {
-  console.log('onBeforeMount')
-  // console.log(input.value)
-})
+import { ref } from 'vue'
+const count = ref(0)
 
-onMounted(() => {
-  console.log(`onMounted`)
-  console.log(input.value.value)
-})
+function increaseCount(n: number) {
+  count.value += n
+}
 </script>
 
 <template>
-  <input ref="my-input" />
+  <!-- <CustomInput v-model="searchQuery" label="Search..." /> -->
+  <MyButton @increase-by="increaseCount" />
+  {{ count }}
 </template>
