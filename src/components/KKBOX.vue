@@ -1,21 +1,18 @@
 <script setup lang="ts">
 import type {
-  Datum,
   Oauth2TokenResponse,
   SearchResponse,
+  Datum,
 } from "@/models/kkbox-api.model";
 import axios from "axios";
 import { onMounted, ref, defineProps, watch, computed } from "vue";
 
-interface Data {
-  kkboxSearchRes: SearchResponse | null;
-}
-
 interface Props {
   search: string
 }
-const state = ref({ kkboxSearchRes: null })
 const props = defineProps<Props>()
+
+const kkboxSearchRes = ref<SearchResponse | null>()
 
 onMounted(() => {
   const urlencoded = new URLSearchParams();
@@ -47,23 +44,20 @@ watch(() => props.search, async (val, OldVal) => {
 
     const json = await searchRes;
 
-    state.value.kkboxSearchRes = json.data;
-    console.log(state.value.kkboxSearchRes)
+    kkboxSearchRes.value = json.data;
   } else {
-    state.value.kkboxSearchRes = null;
+    kkboxSearchRes.value = null;
   }
 })
 
-
-
-const getTracks = computed(() => {
-  return state.value.kkboxSearchRes?.tracks.data ?? [];
+const getTracks = computed<Datum[]>(() => {
+  return kkboxSearchRes.value?.tracks.data ?? [];
 })
 
 </script>
 
 <template>
-  <div v-if="state.kkboxSearchRes">
+  <div v-if="kkboxSearchRes">
     <ul>
       <li v-for="(item, itemIndex) in getTracks" :key="itemIndex">
         <img :src="item.album.images[0].url" />
